@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, CheckCircle, XCircle, User, Clock, Wifi, WifiOff } from 'lucide-react';
+import { Search, CheckCircle, XCircle, User, Clock, Wifi, WifiOff, Camera } from 'lucide-react';
 import { ApiService } from '../services/api';
 import { ParticipantStatus } from '../types';
+import { QRScanner } from './QRScanner';
 
 export const PWA: React.FC = () => {
   const [searchCode, setSearchCode] = useState('');
@@ -10,6 +11,7 @@ export const PWA: React.FC = () => {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [lastAction, setLastAction] = useState<string>('');
+  const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -61,7 +63,7 @@ export const PWA: React.FC = () => {
         // Focar no campo para próximo uso
         searchInputRef.current?.focus();
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Erro ao buscar participante' });
     } finally {
       setLoading(false);
@@ -89,7 +91,7 @@ export const PWA: React.FC = () => {
       setTimeout(() => {
         resetAndFocus();
       }, 2000);
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Erro ao realizar check-in' });
     } finally {
       setLoading(false);
@@ -123,7 +125,7 @@ export const PWA: React.FC = () => {
       setTimeout(() => {
         resetAndFocus();
       }, 2000);
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Erro ao realizar check-out' });
     } finally {
       setLoading(false);
@@ -146,6 +148,15 @@ export const PWA: React.FC = () => {
     setMessage(null);
     setLastAction('');
     searchInputRef.current?.focus();
+  };
+
+  const handleQRResult = (result: string) => {
+    setSearchCode(result);
+    searchParticipant();
+  };
+
+  const openQRScanner = () => {
+    setIsQRScannerOpen(true);
   };
 
   return (
@@ -210,6 +221,14 @@ export const PWA: React.FC = () => {
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Search className="h-5 w-5" />
+          </button>
+          <button
+            onClick={openQRScanner}
+            disabled={loading}
+            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Escanear QR Code"
+          >
+            <Camera className="h-5 w-5" />
           </button>
         </div>
         
@@ -357,6 +376,13 @@ export const PWA: React.FC = () => {
           <p>Digite o código do participante para realizar check-in ou check-out</p>
         </div>
       )}
+
+      {/* QR Scanner */}
+      <QRScanner
+        isOpen={isQRScannerOpen}
+        onClose={() => setIsQRScannerOpen(false)}
+        onResult={handleQRResult}
+      />
     </div>
   );
 }; 

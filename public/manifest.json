@@ -2,7 +2,7 @@
   "name": "Sistema de Check-in",
   "short_name": "Check-in",
   "description": "Sistema de check-in e check-out para eventos",
-  "start_url": "/",
+  "start_url": "/pwa",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
