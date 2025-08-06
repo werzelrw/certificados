@@ -66,7 +66,7 @@ export class CertificateService {
           ]
         };
         // Envia via POST
-        const response = await fetch('https://pskreutz.com.br/desenv/sendmail/api/send-email', {
+        const response = await fetch('https://8e97cc72b2c4.ngrok-free.app/api/send-email', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -74,6 +74,7 @@ export class CertificateService {
           body: JSON.stringify(emailPayload)
         });
         const result = await response.json();
+        console.log(response);
       }
       pdf.save(`certificado-${ticket.codigo_unico}.pdf`);
       
