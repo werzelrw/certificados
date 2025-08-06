@@ -1,9 +1,7 @@
-const CACHE_NAME = 'checkin-v1';
+const CACHE_NAME = 'checkin-v3';
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/static/js/bundle.js',
-  '/static/css/main.css'
+  '/index.html'
 ];
 
 // Instalar service worker
